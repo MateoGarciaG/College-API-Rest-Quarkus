@@ -1,5 +1,6 @@
 DROP TABLE IF EXISTS Student;
 DROP TABLE IF EXISTS Tuition;
+DROP TABLE IF EXISTS Enrollment;
 
 CREATE TABLE Student
 (
@@ -24,14 +25,55 @@ CREATE TABLE Tuition
     status BOOLEAN NOT NULL,
     date_apply DATE NOT NULL,
     amount NUMERIC(0,5) NOT NULL,
+    PRIMARY KEY(id)
+);
+INSERT INTO Tuition (id, status, date_apply, amount, id_student)
+VALUES (134, FALSE, '2017-09-24', 500.78);
+INSERT INTO Tuition (id, status, date_apply, amount, id_student)
+VALUES (135, TRUE, '2018-10-10', 600.80);
+
+
+-- Table Tuition definition without Enrollment Table, student_id FK is in Tuition
+
+-- CREATE TABLE Tuition
+-- (
+--     id BIGINT(20) NOT NULL UNIQUE,
+--     status BOOLEAN NOT NULL,
+--     date_apply DATE NOT NULL,
+--     amount NUMERIC(0,5) NOT NULL,
+--     id_student INTEGER,
+--     PRIMARY KEY (id),
+--     CONSTRAINT `fk_student_tuition`
+--         FOREIGN KEY (id_student) REFERENCES Student(id)
+--         ON DELETE SET NULL
+--         ON UPDATE SET NULL
+-- );
+-- INSERT INTO Tuition (id, status, date_apply, amount, id_student)
+-- VALUES (134, FALSE, '2017-09-24', 500.78,  1050);
+-- INSERT INTO Tuition (id, status, date_apply, amount, id_student)
+-- VALUES (135, TRUE, '2018-10-10', 600.80, 2050);
+
+
+-- Enrollment Table Definition
+
+
+CREATE TABLE Enrollment(
+    id SERIAL NOT NULL,
     id_student INTEGER,
-    PRIMARY KEY (id),
-    CONSTRAINT `fk_student_tuition`
+    id_tuition BIGINT(20),
+    PRIMARY KEY(id)
+    CONSTRAINT `fk_student_enrollment`
         FOREIGN KEY (id_student) REFERENCES Student(id)
+        ON DELETE SET NULL
+        ON UPDATE SET NULL,
+    CONSTRAINT `fk_tuition_enrollment`
+        FOREIGN KEY (id_tuition) REFERENCES Tuition(id)
         ON DELETE SET NULL
         ON UPDATE SET NULL
 );
-INSERT INTO Tuition (id, status, date_apply, amount, id_student)
-VALUES (134, FALSE, '2017-09-24', 500.78,  1050);
-INSERT INTO Tuition (id, status, date_apply, amount, id_student)
-VALUES (135, TRUE, '2018-10-10', 600.80, 2050);
+
+
+INSERT INTO Tuition (id, id_student, id_tuition)
+VALUES (89, 1050, 134);
+INSERT INTO Tuition (id, id_student, id_tuition)
+VALUES (89, 2050, 135);
