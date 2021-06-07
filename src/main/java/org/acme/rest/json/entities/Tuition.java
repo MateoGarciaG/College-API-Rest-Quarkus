@@ -18,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 public class Tuition {
 
     @Id
-	@Column(name = "id", updatable = false)
+	@Column(name = "id", updatable = false, nullable = false, unique = true)
     public Long id;
 
     @Column(name="status", nullable = false)
@@ -29,7 +29,7 @@ public class Tuition {
     public LocalDate dateApply;
 
     
-    @Column(name="amount", nullable = false, length = 30)
+    @Column(name="amount", nullable = false, length = 5)
     public Double amount;
 
 
