@@ -1,4 +1,5 @@
-import java.time.LocalDate;
+package org.acme.rest.json.entities;
+
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -11,25 +12,27 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 
 @Entity
-@Table(name="Tuition")
-@JsonPropertyOrder({"id", "status", "dateApply", "amount"})
+@Table(name="Enrollment")
+@JsonPropertyOrder({"id", "student", "tuition"})
 public class Enrollment {
+    // This Entity is only a way of representation of OneToOne in JPA, not SQL obviously
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "enrollment_id")
     public Long id;
 
+    // There's no need to use mappedBy because the Objects Student and tuition are in this table, not in other
+
     @OneToOne
     @JoinColumn(name = "student_id")
     public Student student;
 
+    // This property has CascadeType, orphanRemoval adn fetch because Tuition have the FK of student_id
     @OneToOne(cascade = CascadeType.ALL, fetch=FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "tuition_id")
     public Tuition tuition;
