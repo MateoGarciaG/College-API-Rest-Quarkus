@@ -1,7 +1,9 @@
 package org.acme.rest.json.entities;
 
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -42,8 +44,12 @@ public class Enrollment {
     public Tuition tuition;
 
     // @JsonFormat(shape = JsonFormat.Shape.STRING,
-    // pattern = "YYYY-MM-DD HH:MM:SS.US+TZ")
+    // pattern = "YYYY-MM-DD HH:mm:SS", timezone = JsonFormat.DEFAULT_TIMEZONE)
     // @Column(name="created", nullable = false, columnDefinition = "TIMESTAMP")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "YYYY-MM-dd HH:mm:SS")
+    @Column(name = "created", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    public LocalDateTime created = LocalDateTime.now();
+    // public LocalDateTime created = LocalDateTime.parse(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
     // public LocalDateTime created;
 
 

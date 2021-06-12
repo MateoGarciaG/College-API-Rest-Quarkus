@@ -65,7 +65,9 @@ CREATE TABLE Enrollment(
     id SERIAL NOT NULL,
     id_student INTEGER,
     id_tuition BIGINT,
-    -- created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    -- https://www.postgresqltutorial.com/postgresql-to_timestamp/
+    -- created TIMESTAMP WITH TIME ZONE DEFAULT TO_TIMESTAMP(to_char(CURRENT_TIMESTAMP, 'YYYY-MM-DD HH:MI:SS'), 'YYYY-MM-DD HH:MI:SS'),
+    created TIMESTAMP DEFAULT TO_TIMESTAMP(to_char(CURRENT_TIMESTAMP, 'YYYY-MM-DD HH:MI:SS'), 'YYYY-MM-DD HH:MI:SS'),
     PRIMARY KEY(id),
     CONSTRAINT fk_student_enrollment
         FOREIGN KEY (id_student) REFERENCES Student(id)
