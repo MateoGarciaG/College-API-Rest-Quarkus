@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 
@@ -21,7 +22,7 @@ public class Tuition {
 	@Column(name = "id", updatable = false, nullable = false, unique = true)
     public Long id;
 
-    @Column(name="status", nullable = false)
+    @Column(name="status_t", nullable = false)
     private Boolean status;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
@@ -29,8 +30,11 @@ public class Tuition {
     public LocalDate dateApply;
 
     
-    @Column(name="amount", nullable = false, length = 5)
+    @Column(name="amount", nullable = false)
     public Double amount;
+
+    // @OneToOne(mappedBy="student_id")
+    // public Enrollment enrollment;
 
 
     public Tuition() {}

@@ -37,6 +37,15 @@ public class RepositoryEnrollment implements PanacheRepository<Enrollment> {
         }
     }
 
+    public void deleteByStudentId(Long id) {
+        Optional<Enrollment> enrollment = this.find("student.id", id).firstResultOptional();
+
+        if(enrollment.isPresent()) {
+            this.delete(enrollment.get());
+        }
+
+    }
+
 
 }
 

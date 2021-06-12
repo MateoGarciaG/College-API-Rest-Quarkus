@@ -43,9 +43,11 @@ public class ServiceStudent {
         return repoTuition.allTuitions();
     }
 
-    public Set<Enrollment> seEnrollments() {
+    public Set<Enrollment> setEnrollments() {
         return repoEnrollment.allEnrollment();
     }
+
+    // ********************************************
 
     // order by
 
@@ -61,6 +63,8 @@ public class ServiceStudent {
         return repoEnrollment.listAllOrderedById();
     }
 
+    // ******************************************
+
 
     // Add Entity
 
@@ -71,29 +75,74 @@ public class ServiceStudent {
         repoStudent.persist(student);
     }
 
-    public void addTuition(Tuition tuition) {
-        repoTuition.persist(tuition);
-    }
+    // public Boolean addTuition(Tuition tuition) {
 
-    public void addEnrollment(Enrollment enrollment) {
-        Optional<Student> student = repoStudent.find("name", enrollment.student.getName()).firstResultOptional();
+    //     Optional<Student> student = repoStudent.find("name", tuition.enrollment.getStudent().getName()).firstResultOptional();
 
-        if(student.isPresent()) {
-            enrollment.student = student.get();
-        } else {
-            repoStudent.persist(enrollment.student);
-        }
+    //     if(student.isPresent()) {
+    //         repoTuition.persist(tuition);
+    //     } else {
+    //         // repoStudent.persist(enrollment.student);
 
-        Optional<Tuition> tuition = repoTuition.find("id", enrollment.tuition.getId()).firstResultOptional();
+    //         return false;
 
-        if(tuition.isPresent()) {
-            enrollment.tuition = tuition.get();
-        } else {
+    //     }
+
+    //     return true;
+    // }
+
+    public Boolean addEnrollment(Enrollment enrollment) {
+
+        Optional<Enrollment> studentFromEnrollments = repoEnrollment.find("student.id", enrollment.student.getId()).firstResultOptional();
+
+        Optional<Student> studentFromStudents = repoStudent.findByIdOptional(enrollment.student.getId());
+        
+
+        // If Student if doesn't in Enrollment Table but the student exists:
+        if(!studentFromEnrollments.isPresent() && studentFromStudents.isPresent()) {
+
+            enrollment.student = studentFromStudents.get();
+
+            // The tuition data from JSON it's add when the Enrollment is persist(), so we don't need to override this data of Tuition.
+
+            // Add the new Tuition to Tuition Table
             repoTuition.persist(enrollment.tuition);
+
+        } else {
+
+            // If the student It's present in Enrollment Table it mean that already has a Tuition, so Return False
+            return false;
+            
+
         }
 
+        // Optional<Tuition> tuition = repoTuition.findByIdOptional(enrollment.tuition.getId());
+
+        // if(tuition.isPresent()) {
+        //     // return False in the case of Student already has a Tuition
+        //     return false;
+        //     // enrollment.tuition = tuition.get();
+        // } else {
+
+        //     repoTuition.persist(enrollment.tuition);
+
+
+        //     // The student doesn't have yet a Tuition, so Added the Tuition from JSON to the Enrollment
+        //     // repoEnrollment.persist(enrollment);
+
+        // }
+
+        // if the student exists and doesn't have a Tuition, persist the Enrollment
         repoEnrollment.persist(enrollment);
+
+        
+
+
+        return true;
+
     }
+
+    // **********************************************+
 
     // Delete Entity
 
@@ -107,9 +156,24 @@ public class ServiceStudent {
         repoTuition.deleteByIdTuition(id);
     }
 
-    public void removeEnrollment(Long id) {
-        repoEnrollment.deleteByIdEnrollment(id);
+    public Boolean removeEnrollment(Enrollment enrollment) {
+
+        Optional<Student> student = repoStudent.findByIdOptional(enrollment.student.id);
+
+        if(student.isPresent()) {
+            // repoEnrollment.deleteByIdEnrollment(enrollment.getId());
+
+            repoEnrollment.deleteByStudentId(enrollment.student.getId());
+
+            repoTuition.deleteByIdTuition(enrollment.tuition.getId());
+        } else {
+            return false;
+        }
+
+        return true;
     }
+
+    // **********************************************
 
     // Get Filter by
 
@@ -122,11 +186,11 @@ public class ServiceStudent {
         return repoTuition.findByIdOptional(id);
     }
 
-    public Optional<Enrollment> getEnrollmentByID(Long id) {
+    public Optional<Enrollment> getEnrollmentById(Long id) {
         return repoEnrollment.findByIdOptional(id);
     }
 
-    
+    // ****************************************************
 
 
     // update Entity
@@ -154,6 +218,39 @@ public class ServiceStudent {
 
         return studentOptional;
     }
+
+
+    // Update Tuition through Enrollment
+    public Boolean updateEnrollment(Enrollment enrollment) {
+        Optional<Student> student = repoStudent.findByIdOptional(enrollment.student.id);
+
+        if(student.isPresent()) {
+            enrollment.student = student.get();
+        } else {
+            
+            // If the student doesn't exist obviously Return False
+            return false;
+
+        }
+
+        Optional<Tuition> tuition = repoTuition.findByIdOptional(enrollment.tuition.getId());
+
+        if(tuition.isPresent()) {
+            // If it's present the Tuition, update it
+            enrollment.tuition = tuition.get();
+            
+        } else {
+
+            // If the Tuition doesn't exist, don't add. In change, return False due that it's trying to update a Tuition that doesn't exist.
+            return false;
+        }
+
+        repoEnrollment.persist(enrollment);
+
+        return true;
+
+    }
+
 
 
 }
