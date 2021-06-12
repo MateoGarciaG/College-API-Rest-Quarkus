@@ -50,8 +50,7 @@ public class Student {
     public Student() {}
 
 
-    public Student(Long id, String name, String surname, LocalDate dateBirth, String phone) {
-        this.id = id;
+    public Student(String name, String surname, LocalDate dateBirth, String phone) {
         this.name = name;
         this.surname = surname;
         this.dateBirth = dateBirth;

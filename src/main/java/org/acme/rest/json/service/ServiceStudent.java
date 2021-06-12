@@ -113,24 +113,7 @@ public class ServiceStudent {
             // If the student It's present in Enrollment Table it mean that already has a Tuition, so Return False
             return false;
             
-
         }
-
-        // Optional<Tuition> tuition = repoTuition.findByIdOptional(enrollment.tuition.getId());
-
-        // if(tuition.isPresent()) {
-        //     // return False in the case of Student already has a Tuition
-        //     return false;
-        //     // enrollment.tuition = tuition.get();
-        // } else {
-
-        //     repoTuition.persist(enrollment.tuition);
-
-
-        //     // The student doesn't have yet a Tuition, so Added the Tuition from JSON to the Enrollment
-        //     // repoEnrollment.persist(enrollment);
-
-        // }
 
         // if the student exists and doesn't have a Tuition, persist the Enrollment
         repoEnrollment.persist(enrollment);
@@ -158,9 +141,9 @@ public class ServiceStudent {
 
     public Boolean removeEnrollment(Enrollment enrollment) {
 
-        Optional<Student> student = repoStudent.findByIdOptional(enrollment.student.id);
+        Optional<Enrollment> studentFromEnrollments = repoEnrollment.find("student.id", enrollment.student.getId()).firstResultOptional();
 
-        if(student.isPresent()) {
+        if(studentFromEnrollments.isPresent()) {
             // repoEnrollment.deleteByIdEnrollment(enrollment.getId());
 
             repoEnrollment.deleteByStudentId(enrollment.student.getId());
@@ -222,30 +205,51 @@ public class ServiceStudent {
 
     // Update Tuition through Enrollment
     public Boolean updateEnrollment(Enrollment enrollment) {
-        Optional<Student> student = repoStudent.findByIdOptional(enrollment.student.id);
 
-        if(student.isPresent()) {
-            enrollment.student = student.get();
+        Optional<Enrollment> studentFromEnrollments = repoEnrollment.find("student.id", enrollment.student.getId()).firstResultOptional();
+
+        Optional<Tuition> tuitionFromTuitions = repoTuition.findByIdOptional(enrollment.tuition.getId());
+
+        // Optional<Student> studentFromStudents = repoStudent.findByIdOptional(enrollment.student.getId());
+        
+
+        // If Student exists in Enrollment Table:
+        if(studentFromEnrollments.isPresent() && tuitionFromTuitions.isPresent()) {
+
+            // Update Enrollment
+
+            Enrollment updateEnrollment = studentFromEnrollments.get();
+
+            // The data of the student will not be updated because always will be the same
+
+            // Update the old data of Tuition
+            updateEnrollment.setTuition(enrollment.getTuition());
+
+
+            // Update Tuition in Tuition table
+
+            Tuition tuitionUpdate = tuitionFromTuitions.get();
+
+            tuitionUpdate.setStatus(enrollment.tuition.getStatus());
+
+            tuitionUpdate.setDateApply(enrollment.tuition.getDateApply());
+
+            tuitionUpdate.setAmount(enrollment.tuition.getAmount());
+
+            // Update the tuition of the student in the Tuition Table, because in the Enrollment table will be updated too in the line before: return true
+            repoTuition.persist(tuitionUpdate);
+
         } else {
-            
-            // If the student doesn't exist obviously Return False
-            return false;
 
+            // If the student It's not present in Enrollment Table it mean that it was not added yet, so you must add first the Student with his/her Tuition in Enrollment Table before trying to update it, so Return False
+            return false;
+            
         }
 
-        Optional<Tuition> tuition = repoTuition.findByIdOptional(enrollment.tuition.getId());
+        // if the student exists and doesn't have a Tuition, persist the Enrollment
+        // ERROR DUPLICADO: Al parecer con Tablas PUentes no es necesario volver a Persistir la Entidad actualizada, ya con actualizarla basta para que Panache lo actualice.
+        // repoEnrollment.persist(enrollment);
 
-        if(tuition.isPresent()) {
-            // If it's present the Tuition, update it
-            enrollment.tuition = tuition.get();
-            
-        } else {
-
-            // If the Tuition doesn't exist, don't add. In change, return False due that it's trying to update a Tuition that doesn't exist.
-            return false;
-        }
-
-        repoEnrollment.persist(enrollment);
 
         return true;
 

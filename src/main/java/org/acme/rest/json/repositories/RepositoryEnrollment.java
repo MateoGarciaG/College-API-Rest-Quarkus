@@ -30,6 +30,8 @@ public class RepositoryEnrollment implements PanacheRepository<Enrollment> {
         return this.listAll(Sort.by("id").ascending());
     }
 
+    // Delete Methods
+
     public void deleteByIdEnrollment(Long id) {
         Optional<Enrollment> enrollment = this.findByIdOptional(id);
         if (enrollment.isPresent()) {
