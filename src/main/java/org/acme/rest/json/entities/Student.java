@@ -1,27 +1,24 @@
 package org.acme.rest.json.entities;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
-
 @Entity
 @Table(name="Student")
-@JsonPropertyOrder({"name", "surname", "dateBirth", "phone"})
+@JsonPropertyOrder({"name", "surname", "dateBirth", "phone", "university"})
 public class Student {
 
     @Id
@@ -52,14 +49,20 @@ public class Student {
     @Column(name="phone")
     public String phone;
 
+    // Bidireccional Student - University
+    @ManyToOne
+    @JoinColumn(name="university_id")
+    public University university;
+
     public Student() {}
 
 
-    public Student(String name, String surname, LocalDate dateBirth, String phone) {
+    public Student(String name, String surname, LocalDate dateBirth, String phone, University university) {
         this.name = name;
         this.surname = surname;
         this.dateBirth = dateBirth;
         this.phone = phone;
+        this.university = university;
     }
 
 
@@ -95,6 +98,17 @@ public class Student {
         this.phone = phone;
     }
 
+    public Long getId() {
+        return this.id;
+    }
+
+    public University getUniversity() {
+        return this.university;
+    }
+
+    public void setUniversity(University university) {
+        this.university = university;
+    }
     
     
 }
