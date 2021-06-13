@@ -43,7 +43,7 @@ public class ResourceStudentTest {
             given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/students/all")
+                .get("/api/students/all")
                 .as(new TypeRef<List<Map<String, Object>>>() {});
 
         Assertions.assertThat(products).hasSize(2);
@@ -60,7 +60,7 @@ public class ResourceStudentTest {
 
         given()
             .contentType(ContentType.JSON)
-        .when().get("/students/all")
+        .when().get("/api/students/all")
         .then()
             .statusCode(200)
             .body("$.size()", is(2),
@@ -77,7 +77,7 @@ public class ResourceStudentTest {
             .body("{\"name\": \"Pedro\", \"surname\": \"Gimenez\", \"dateBirth\": \"1990-12-17\", \"phone\": \"+34 687687878\"}")
             .header("Content-Type", MediaType.APPLICATION_JSON)
         .when()
-            .post("/students/add")
+            .post("/api/students/add")
         .then()
             .statusCode(200)
             .body("$.size()", is(3),
@@ -91,7 +91,7 @@ public class ResourceStudentTest {
             .body("{\"name\": \"Pedro\", \"surname\": \"Gimenez\", \"dateBirth\": \"1990-12-17\", \"phone\": \"+34 687687878\"}")
             .header("Content-Type", MediaType.APPLICATION_JSON)
         .when()
-            .delete("/students/delete")
+            .delete("/api/students/delete")
         .then()
             .statusCode(200)
             .body("$.size()", is(2),
@@ -110,7 +110,7 @@ public class ResourceStudentTest {
         given()
             .pathParam("name", "Mateo")
         .when()
-            .get("/students/{name}")
+            .get("/api/students/{name}")
         .then()
             .contentType(ContentType.JSON)
             .body("name", equalTo("Mateo"),
@@ -124,7 +124,7 @@ public class ResourceStudentTest {
         given()
             .pathParam("name", "Julian")
         .when()
-            .get("/students/{name}")
+            .get("/api/students/{name}")
         .then()
             .statusCode(404);
     }
@@ -139,7 +139,7 @@ public class ResourceStudentTest {
             .body("{\"name\": \"Mateo\", \"surname\": \"Gomez\", \"dateBirth\": \"2000-10-17\", \"phone\": \"+34 688888888\"}")
             .header("Content-Type", MediaType.APPLICATION_JSON)
         .when()
-            .put("/students/put")
+            .put("/api/students/put")
         .then()
             .contentType(ContentType.JSON)
             .body("name", equalTo("Mateo"),
@@ -153,7 +153,7 @@ public class ResourceStudentTest {
     given().body("{\"name\": \"Mateo\", \"surname\": \"Alvarez\", \"dateBirth\": \"2005-06-05\", \"phone\": \"+34 666666666\"}")
         .header("Content-Type", MediaType.APPLICATION_JSON)
         .when()
-            .put("/students/put")
+            .put("/api/students/put")
         .then()
             .contentType(ContentType.JSON)
             .body("name", equalTo("Mateo"),
