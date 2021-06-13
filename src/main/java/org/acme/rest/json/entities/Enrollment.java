@@ -37,9 +37,36 @@ public class Enrollment {
     @JoinColumn(name = "id_student")
     public Student student;
 
-    // This property has CascadeType, orphanRemoval adn fetch because Tuition have the FK of student_id
+
+    // @OneToOne
+    // This property has CascadeType, orphanRemoval adn fetch because Tuition have the FK of student_id and
+    // In JPA, if we don't create a brigde Table like this "Enrollment" Entity, the FK object Student will be in Tuition Entity in the case of being Unidirectional
+    //  In the case of being Bidirectional, we need to add The Object Tuition to Student Entity which Student it's the father entity of the relation, because A Tuition cannot exists without a student, so we put the CascadeType, mappedBy and FetchType in Tuition Object which will be in the Father Entity which it's Student.
+    // Example OneToOne without Enrollment Entity:
+
+    /* 
+    ? In Student Entity: It's the father Entity of the relation
+
+    * As we can see this property doesn't have @JoinColumn or @Column because it's not present in SQL tables, only in JPA context
+
+    @OneToOne(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Tuition tuition;
+
+    ? In Tuition Entity: It's the child Entity of the relation, depends on Student Entity
+
+    * Due to A Tuition depends on Student, In SQL A Tuition has a FK of Student, in JPA it's the same with @JoinColumn to indicate that it's a FK Student.
+    
+    @JoinColumn(name = "student_id")
+    @OneToOne(fetch = FetchType.LAZY)
+    private Student student;
+    
+    
+    */
+
+
+    // In this case where we have "Enrollment", it's similar because the CascadeType and FetchType it's put in the Tuition Object to simulate the Father Entity over the Child Entity which it's Tuition and the mappedBy it's innecessary because both Student and Tuition Objects are in this Entity "Enrollment":
     // @OneToOne(cascade = CascadeType.ALL, fetch=FetchType.LAZY, orphanRemoval = true)
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_tuition")
     public Tuition tuition;
 

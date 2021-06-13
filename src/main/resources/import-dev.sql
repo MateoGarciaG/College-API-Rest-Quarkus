@@ -3,6 +3,26 @@ DROP TABLE IF EXISTS Enrollment;
 -- Last Tables that doesn't have FK
 DROP TABLE IF EXISTS Tuition;
 DROP TABLE IF EXISTS Student;
+DROP TABLE IF EXISTS University;
+
+
+-- ONE TO MANY
+
+-- UNIVERSITY
+CREATE TABLE University
+(
+    id SERIAL NOT NULL,
+    name VARCHAR (255) NOT NULL,
+    address VARCHAR(255) NOT NULL,
+    email VARCHAR(200) NOT NULL,
+    phone VARCHAR(22),
+    PRIMARY KEY (id)
+);
+
+INSERT INTO University (id, name, address, email, phone)
+VALUES (50, 'Stanford University', '450 Serra Mall, Stanford, CA 94305, Estados Unidos', 'stanford@gmail.com', '+34 777777777');
+INSERT INTO University (id, name, address, email, phone)
+VALUES (51, 'Harvard University', 'Cambridge, MA, Estados Unidos', 'harvard@gmail.com', '+34 888888888');
 
 
 CREATE TABLE Student
@@ -13,13 +33,19 @@ CREATE TABLE Student
     date_birth DATE NOT NULL,
     -- VARCHAR(22) because the number must be indicate the country. example: +34 and the limit is 22 characters
     phone VARCHAR(22),
+    -- FK University
+    university_id INTEGER,
+    CONSTRAINT fk_student_university
+        FOREIGN KEY (university_id) REFERENCES University(id)
+        ON DELETE SET NULL
+        ON UPDATE SET NULL,
     PRIMARY KEY (id)
 );
 
-INSERT INTO Student (id, name, surname, date_birth, phone)
-VALUES (1050, 'Mateo', 'Alvarez', '2005-06-05', '+34 666666666');
-INSERT INTO Student (id, name, surname, date_birth, phone)
-VALUES (2050, 'Will', 'Smith', '1999-06-17', '+34 677878997');
+INSERT INTO Student (id, name, surname, date_birth, phone, university_id)
+VALUES (1050, 'Mateo', 'Alvarez', '2005-06-05', '+34 666666666', 50);
+INSERT INTO Student (id, name, surname, date_birth, phone, university_id)
+VALUES (2050, 'Will', 'Smith', '1999-06-17', '+34 677878997', 51);
 
 -- Tuition Table definition
 
@@ -84,3 +110,5 @@ INSERT INTO Enrollment (id, id_student, id_tuition)
 VALUES (89, 1050, 134);
 INSERT INTO Enrollment (id, id_student, id_tuition)
 VALUES (90, 2050, 135);
+
+
