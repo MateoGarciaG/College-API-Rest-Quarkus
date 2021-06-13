@@ -40,6 +40,7 @@ public class ServiceStudentTest {
     
         @Test
         public void addStudentTest() {
+            // REVISIÓN: FALTA EL OBJETO UNIVERSITY
             service.add(new Student("Pedro", "Gimenez", LocalDate.of(1990, Month.DECEMBER, 17), "+34 687687878"));
     
             System.out.println(service.setStudents());
@@ -65,6 +66,7 @@ public class ServiceStudentTest {
             Assertions.assertThat(service.setStudents().stream().anyMatch(f -> f.getName().equalsIgnoreCase("Will"))).isFalse();
     
             // handmade rollback debido al antipatron ActiveRecord 
+            // FALTA EL OBJETO UNIVERSITY
             repo.persist(new Student("Will", "Smith", LocalDate.of(1999, Month.JUNE, 17), "+34 677878997"));
             Assertions.assertThat(repo.count()).isEqualTo(2);
         }
@@ -82,6 +84,7 @@ public class ServiceStudentTest {
             
 
             // Update Will Student with new Data
+            // FALTA EL OBJETO UNIVERSITY
             service.updateStudent(new Student("Will", "James", LocalDate.of(1987, Month.SEPTEMBER, 06), "+34 687685598"));
 
             // Check if the total of student is still 2
