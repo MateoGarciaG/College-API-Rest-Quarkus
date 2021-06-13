@@ -19,6 +19,7 @@ import javax.ws.rs.core.MediaType;
 import org.acme.rest.json.entities.Enrollment;
 import org.acme.rest.json.entities.Student;
 import org.acme.rest.json.entities.Tuition;
+import org.acme.rest.json.entities.University;
 import org.acme.rest.json.service.ServiceStudent;
 
 @Path("/api")
@@ -30,6 +31,10 @@ public class ResourceStudent {
     public ResourceStudent() {
         // CDI
     }
+
+    // ***************************************************
+
+    // * Student Endpoints
 
     @GET
     @Path("/students/all")
@@ -47,9 +52,10 @@ public class ResourceStudent {
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
     public Response addStudent(@Valid Student student) {
-        service.add(student);
+        Boolean addStudent = service.add(student);
 
-        return Response.ok(service.setStudents(), MediaType.APPLICATION_JSON_TYPE).header("message", "The Student was add succesfully!!!").build();
+        // BAD_REQUEST because it's not found, it's because the Request is bas probably due to University doesn't exist.
+        return addStudent.booleanValue() ? Response.ok(service.setStudents(), MediaType.APPLICATION_JSON_TYPE).header("message", "The Student was add succesfully!!!").build() : Response.status(Response.Status.BAD_REQUEST).build();
     }
 
     @DELETE
@@ -90,7 +96,7 @@ public class ResourceStudent {
 
     // *********************************************
 
-    // Tuition Endpoints
+    // * Tuition Endpoints
 
     @GET
     @Path("/tuitions/all")
@@ -130,7 +136,7 @@ public class ResourceStudent {
 
     // *********************************************
 
-    // Enrollment Endpoints
+    // * Enrollment Endpoints
 
     // GET
 
@@ -157,7 +163,7 @@ public class ResourceStudent {
         Boolean acceptEnrollment = service.addEnrollment(enrollment);
 
         // SI "acceptEnrolment" i'ts True it means that the Student exist so the Tuition can be add related to that student, if it doesn't exists, the tuition doesn't have a reason to exist, because a Tuition cannot be related to nobody, always is related to a student.
-        return acceptEnrollment ? Response.ok(service.setEnrollments(), MediaType.APPLICATION_JSON_TYPE).header("message", "The Enrollment and Tuition was add succesfully!!!").build() : Response.status(Response.Status.NOT_FOUND).build();
+        return acceptEnrollment.booleanValue() ? Response.ok(service.setEnrollments(), MediaType.APPLICATION_JSON_TYPE).header("message", "The Enrollment and Tuition was add succesfully!!!").build() : Response.status(Response.Status.NOT_FOUND).build();
     }
 
 
@@ -169,7 +175,7 @@ public class ResourceStudent {
     public Response updateEnrollment(@Valid Enrollment enrollment) {
         Boolean enrollmentUpdated = service.updateEnrollment(enrollment);
 
-        return enrollmentUpdated ? Response.ok(service.setEnrollments(), MediaType.APPLICATION_JSON_TYPE).header("message", "The Enrollment and Tuition was updated succesfully!!!").build() : Response.status(Response.Status.NOT_FOUND).build();
+        return enrollmentUpdated.booleanValue() ? Response.ok(service.setEnrollments(), MediaType.APPLICATION_JSON_TYPE).header("message", "The Enrollment and Tuition was updated succesfully!!!").build() : Response.status(Response.Status.NOT_FOUND).build();
 
     }
 
@@ -185,7 +191,7 @@ public class ResourceStudent {
         Boolean checkRemoveEnrollment = service.removeEnrollment(enrollment);
 
 
-        return checkRemoveEnrollment ? Response.ok(service.setEnrollments(), MediaType.APPLICATION_JSON).header("message", "The Enrollment and Tuition was remove was deleted succesfully!!!").build() : Response.status(Response.Status.NOT_FOUND).build();
+        return checkRemoveEnrollment.booleanValue() ? Response.ok(service.setEnrollments(), MediaType.APPLICATION_JSON).header("message", "The Enrollment and Tuition was remove was deleted succesfully!!!").build() : Response.status(Response.Status.NOT_FOUND).build();
     }
 
 
@@ -202,6 +208,73 @@ public class ResourceStudent {
 
     }
 
+
+    // *********************************************
+    // * University Endpoints
+
+    // GET ALL
+    @GET
+    @Path("/universities/all")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Transactional
+    public Response allUniversities() {
+        // ok() method already have a STATUS 200
+        return Response.ok(service.setUniversities(), MediaType.APPLICATION_JSON).header("message", "All Universities returned").build();
+    }
+
+    // POST
+    @POST
+    @Path("/universities/add")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Transactional
+    public Response addUniversity(@Valid University university) {
+        Boolean acceptUniversity = service.addUniversity(university);
+
+        return acceptUniversity.booleanValue() ? Response.ok(service.setUniversities(), MediaType.APPLICATION_JSON_TYPE).header("message", "The University was add succesfully!!!").build() : Response.status(Response.Status.NOT_FOUND).build();
+    }
+
+    // DELETE
+    @DELETE
+    @Path("/universities/delete")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Transactional
+    public Response deleteUniversity(@Valid University university) {
+
+
+        Boolean checkUniversity = service.removeUniversity(university);
+
+
+        return checkUniversity.booleanValue() ? Response.ok(service.setUniversities(), MediaType.APPLICATION_JSON).header("message", "The University was deleted succesfully!!!").build() : Response.status(Response.Status.NOT_FOUND).build();
+    }
+
+    // PUT
+    @PUT
+    @Path("/universities/put")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Transactional
+    public Response updateUniversities(@Valid University university) {
+        Optional<University> universityUpdated = service.updateUniversity(university);
+
+        return universityUpdated.isPresent() ? Response.status(Response.Status.OK).entity(universityUpdated.get()).build() : Response.status(Response.Status.NOT_FOUND).build();
+
+    }
+
+    // GET BY ID
+    @GET
+    @Path("/universities/{id}")
+    // @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Transactional
+    public Response getUniversityById(@PathParam("id") Long id) {
+        Optional<University> university = service.getUniversityById(id);
+
+        return university.isPresent() ? Response.status(Response.Status.OK).entity(university.get()).build() : Response.status(Response.Status.NOT_FOUND).build();
+
+    }
 
 
     // *********************************************

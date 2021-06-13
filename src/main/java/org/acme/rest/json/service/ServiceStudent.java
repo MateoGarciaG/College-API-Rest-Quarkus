@@ -10,9 +10,11 @@ import javax.inject.Inject;
 import org.acme.rest.json.entities.Enrollment;
 import org.acme.rest.json.entities.Student;
 import org.acme.rest.json.entities.Tuition;
+import org.acme.rest.json.entities.University;
 import org.acme.rest.json.repositories.RepositoryEnrollment;
 import org.acme.rest.json.repositories.RepositoryStudent;
 import org.acme.rest.json.repositories.RepositoryTuition;
+import org.acme.rest.json.repositories.RepositoryUniversity;
 
 
 
@@ -28,6 +30,9 @@ public class ServiceStudent {
 
     @Inject
     RepositoryEnrollment repoEnrollment;
+
+    @Inject
+    RepositoryUniversity repoUniversity;
 
     
     public ServiceStudent() {}
@@ -47,6 +52,10 @@ public class ServiceStudent {
         return repoEnrollment.allEnrollment();
     }
 
+    public Set<University> setUniversities() {
+        return repoUniversity.allUniversities();
+    }
+
     // ********************************************
 
     // order by
@@ -63,16 +72,36 @@ public class ServiceStudent {
         return repoEnrollment.listAllOrderedById();
     }
 
+    public List<University> universitiesOrderByName() {
+        return repoUniversity.listAllOrderedByName();
+    }
+
     // ******************************************
 
 
     // Add Entity
 
 
-    public void add(Student student) {
+    public Boolean add(Student student) {
 
         // Like it was said in repoStudentStudent, in this layer we can call directly the method persist() or other from Panache to manage the Entity inside the Persistence Context. But with the use of a repoStudentSITORY we need to insert in the parameter of Panache methods the Entity which is affect by the panache method
-        repoStudent.persist(student);
+
+        Optional<University> universityFromRepo = repoUniversity.findByIdOptional(student.getUniversity().getId());
+
+        if(universityFromRepo.isPresent()) {
+
+
+            // To avoid Null of the Data of University, add the rest of the Data of the University to this new Student
+            student.setUniversity(universityFromRepo.get());
+
+            // After persist the new Student
+            repoStudent.persist(student);
+
+        } else {
+            return false;
+        }
+
+        return true;
     }
 
     // public Boolean addTuition(Tuition tuition) {
@@ -125,6 +154,28 @@ public class ServiceStudent {
 
     }
 
+
+    public Boolean addUniversity(University university) {
+
+        
+        // Optional<University> universityFromRepo = repoUniversity.findByIdOptional(university.getId());
+
+        Optional<University> universityFromRepo = repoUniversity.find("name", university.getName()).firstResultOptional();
+
+
+        if(!universityFromRepo.isPresent()) {
+
+            // If it's not exist the university before, Add to persistence context
+            repoUniversity.persist(university);
+
+        } else {
+            return false;
+        }
+
+        return true;
+    }
+
+
     // **********************************************+
 
     // Delete Entity
@@ -156,6 +207,20 @@ public class ServiceStudent {
         return true;
     }
 
+    public boolean removeUniversity(University university) {
+
+        Optional<University> universityFromRepo = repoUniversity.findByIdOptional(university.getId());
+
+        if(universityFromRepo.isPresent()) {
+            repoUniversity.deleteByIdUniversity(university.getId());
+        } else {
+            return false;
+        }
+
+        return true;
+    }
+
+
     // **********************************************
 
     // Get Filter by
@@ -171,6 +236,10 @@ public class ServiceStudent {
 
     public Optional<Enrollment> getEnrollmentById(Long id) {
         return repoEnrollment.findByIdOptional(id);
+    }
+
+    public Optional<University> getUniversityById(Long id) {
+        return repoUniversity.findByIdOptional(id);
     }
 
     // ****************************************************
@@ -248,11 +317,39 @@ public class ServiceStudent {
 
         // if the student exists and doesn't have a Tuition, persist the Enrollment
         // ERROR DUPLICADO: Al parecer con Tablas PUentes no es necesario volver a Persistir la Entidad actualizada, ya con actualizarla basta para que Panache lo actualice.
+        // SOlution: It seems that Panache automatically SAved all changes when the Entity is updated without call PERSIST() again:
+        /* 
+        "note that once persisted, you don't need to explicitly save your entity: all modifications are automatically persisted on transaction commit."
+        */
         // repoEnrollment.persist(enrollment);
 
 
         return true;
 
+    }
+
+
+    public Optional<University> updateUniversity(University newUniversity) {
+        
+        // Optional<University> universityFromRepo = repoUniversity.find("name", newUniversity.getName()).firstResultOptional();
+
+        Optional<University> universityFromRepo = repoUniversity.findByIdOptional(newUniversity.getId());
+
+        if(universityFromRepo.isPresent()) {
+            University university = universityFromRepo.get();
+
+            university.setAddress(newUniversity.getAddress());
+            university.setEmail(newUniversity.getEmail());
+            university.setPhone(newUniversity.getPhone());
+
+            // We need to put in the parameter the Entity updated to persist it
+            repoUniversity.persist(university);
+
+        } else {
+            return Optional.ofNullable(null);
+        }
+
+        return universityFromRepo;
     }
 
 
