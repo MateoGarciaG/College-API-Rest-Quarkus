@@ -19,9 +19,15 @@ https://github.com/MateoGarciaG/College-API-Rest-Quarkus/tree/master
 
 - This API's using PostGreSQL with Active Record Pattern:
 
+https://github.com/MateoGarciaG/College-API-Rest-Quarkus/tree/feature/active-record
+
 - This API's using name of the Student as ID and using mappedBy with this:
 
 - This API's using ID type Long of the Student as ID and using mappedBy with this:
+
+https://github.com/MateoGarciaG/College-API-Rest-Quarkus/tree/feature/students
+
+In this branch you can see in the Scripts SQL, Entities and enpoints how I use by ID
 
 2. This Project use all type of Relations: @OneToOne, @OneToMany, @ManyToOne, @ManyToMany. With bidirectional and unidirectional form. All these relations are adaptared with the Entities and Tables.
 - Relation @OneToOne using a Brigde Table "Enrollment":
