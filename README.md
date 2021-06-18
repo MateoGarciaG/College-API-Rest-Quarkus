@@ -7,6 +7,8 @@ Things to consider:
 1. This project has branches which are related with "Programming" asignature where are basically related with:
 - This API's using MySQL, you can find it here:
 
+https://github.com/MateoGarciaG/College-API-Rest-Quarkus/tree/feature/MySQL
+
 - This API's using MariaDB, you can find it here:
 
 - This API's using PostGreSQL, it's the default Database that I use, you can find it here:
