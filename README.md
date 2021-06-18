@@ -1,8 +1,11 @@
-# College API REST Quarkus
+# College API REST Quarkus with Active Record
 
 ## About this Project
-Wellcome to my Project College API Rest with DAO Pattern and Quarkus FrameWork related to Java. This project is a API related to College System where you will find and get data of: Students, Universities, Tuition, Enrollments and Courses.
+Wellcome to my Project College API Rest with Active Pattern and Quarkus FrameWork related to Java. This project is a API related to College System where you will find and get data of: Students, Universities, Tuition, Enrollments and Courses.
 Things to consider:
+
+DON'T IMPLEMENT YET, IN PROCESS
+
 ---
 1. This project has branches which are related with "Programming" asignature where are basically related with:
 - This API's using MySQL, you can find it here:
