@@ -11,7 +11,11 @@ https://github.com/MateoGarciaG/College-API-Rest-Quarkus/tree/feature/MySQL
 
 - This API's using MariaDB, you can find it here:
 
+https://github.com/MateoGarciaG/College-API-Rest-Quarkus/tree/feature/MariaDB
+
 - This API's using PostGreSQL, it's the default Database that I use, you can find it here:
+
+https://github.com/MateoGarciaG/College-API-Rest-Quarkus/tree/master
 
 - This API's using PostGreSQL with Active Record Pattern:
 
