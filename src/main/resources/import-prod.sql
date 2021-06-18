@@ -11,18 +11,17 @@ DROP TABLE IF EXISTS University;
 -- UNIVERSITY
 CREATE TABLE University
 (
-    id SERIAL NOT NULL,
     name VARCHAR (255) NOT NULL,
     address VARCHAR(255) NOT NULL,
     email VARCHAR(200) NOT NULL,
     phone VARCHAR(22),
-    PRIMARY KEY (id)
+    PRIMARY KEY (name)
 );
 
-INSERT INTO University (id, name, address, email, phone)
-VALUES (50, 'Stanford University', '450 Serra Mall, Stanford, CA 94305, Estados Unidos', 'stanford@gmail.com', '+34 777777777');
-INSERT INTO University (id, name, address, email, phone)
-VALUES (51, 'Harvard University', 'Cambridge, MA, Estados Unidos', 'harvard@gmail.com', '+34 888888888');
+INSERT INTO University (name, address, email, phone)
+VALUES ('Stanford University', '450 Serra Mall, Stanford, CA 94305, Estados Unidos', 'stanford@gmail.com', '+34 777777777');
+INSERT INTO University (name, address, email, phone)
+VALUES ('Harvard University', 'Cambridge, MA, Estados Unidos', 'harvard@gmail.com', '+34 888888888');
 
 
 CREATE TABLE Student

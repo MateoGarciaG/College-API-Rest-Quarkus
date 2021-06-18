@@ -11,11 +11,11 @@ import javax.enterprise.context.ApplicationScoped;
 import org.acme.rest.json.entities.Tuition;
 import org.acme.rest.json.entities.University;
 
-import io.quarkus.hibernate.orm.panache.PanacheRepository;
+import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import io.quarkus.panache.common.Sort;
 
 @ApplicationScoped
-public class RepositoryUniversity implements PanacheRepository<University>{
+public class RepositoryUniversity implements PanacheRepositoryBase<University, String>{
     
     public Set<University> allUniversities() {
 
@@ -30,21 +30,9 @@ public class RepositoryUniversity implements PanacheRepository<University>{
 
     // Delete Methods
 
-    public void deleteByIdUniversity(Long id) {
+    public void deleteByIdUniversity(String idName) {
 
-        Optional<University> university = this.findByIdOptional(id);
-
-        if(university.isPresent()) {
-            this.delete(university.get());
-        }
-
-
-    }
-
-
-    public void deleteByNameUniversity(String name) {
-
-        Optional<University> university = this.find("name", name).firstResultOptional();
+        Optional<University> university = this.findByIdOptional(idName);
 
         if(university.isPresent()) {
             this.delete(university.get());

@@ -21,10 +21,6 @@ public class University {
     
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    public Long id;
-
     @NotBlank
     @Column(name = "name", nullable = false)
     public String name;
@@ -57,10 +53,6 @@ public class University {
         this.phone = phone;
     }
 
-
-    public Long getId() {
-        return this.id;
-    }
 
     public String getName() {
         return this.name;

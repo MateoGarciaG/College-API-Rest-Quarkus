@@ -86,7 +86,7 @@ public class ServiceStudent {
 
         // Like it was said in repoStudentStudent, in this layer we can call directly the method persist() or other from Panache to manage the Entity inside the Persistence Context. But with the use of a repoStudentSITORY we need to insert in the parameter of Panache methods the Entity which is affect by the panache method
 
-        Optional<University> universityFromRepo = repoUniversity.findByIdOptional(student.getUniversity().getId());
+        Optional<University> universityFromRepo = repoUniversity.find("name", student.getUniversity().getName()).firstResultOptional();
 
         if(universityFromRepo.isPresent()) {
 
@@ -209,10 +209,10 @@ public class ServiceStudent {
 
     public boolean removeUniversity(University university) {
 
-        Optional<University> universityFromRepo = repoUniversity.findByIdOptional(university.getId());
+        Optional<University> universityFromRepo = repoUniversity.find("name", university.getName()).firstResultOptional();
 
         if(universityFromRepo.isPresent()) {
-            repoUniversity.deleteByIdUniversity(university.getId());
+            repoUniversity.deleteByIdUniversity(university.getName());
         } else {
             return false;
         }
@@ -238,8 +238,8 @@ public class ServiceStudent {
         return repoEnrollment.findByIdOptional(id);
     }
 
-    public Optional<University> getUniversityById(Long id) {
-        return repoUniversity.findByIdOptional(id);
+    public Optional<University> getUniversityById(String idName) {
+        return repoUniversity.find("name", idName).firstResultOptional();
     }
 
     // ****************************************************
@@ -333,7 +333,7 @@ public class ServiceStudent {
         
         // Optional<University> universityFromRepo = repoUniversity.find("name", newUniversity.getName()).firstResultOptional();
 
-        Optional<University> universityFromRepo = repoUniversity.findByIdOptional(newUniversity.getId());
+        Optional<University> universityFromRepo = repoUniversity.find("name", newUniversity.getName()).firstResultOptional();
 
         if(universityFromRepo.isPresent()) {
             University university = universityFromRepo.get();
