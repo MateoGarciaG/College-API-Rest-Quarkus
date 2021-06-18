@@ -21,7 +21,11 @@ https://github.com/MateoGarciaG/College-API-Rest-Quarkus/tree/master
 
 https://github.com/MateoGarciaG/College-API-Rest-Quarkus/tree/feature/active-record
 
-- This API's using name of the Student as ID and using mappedBy with this:
+- This API's using name of the University as ID and using mappedBy with this:
+
+https://github.com/MateoGarciaG/College-API-Rest-Quarkus/tree/feature/mappedby-name
+
+https://github.com/MateoGarciaG/College-API-Rest-Quarkus/blob/feature/mappedby-name/src/main/java/org/acme/rest/json/entities/University.java
 
 - This API's using ID type Long of the Student as ID and using mappedBy with this:
 
@@ -32,11 +36,32 @@ In this branch you can see in the Scripts SQL, Entities and enpoints how I use b
 2. This Project use all type of Relations: @OneToOne, @OneToMany, @ManyToOne, @ManyToMany. With bidirectional and unidirectional form. All these relations are adaptared with the Entities and Tables.
 - Relation @OneToOne using a Brigde Table "Enrollment":
 
+https://github.com/MateoGarciaG/College-API-Rest-Quarkus/blob/feature/students/src/main/java/org/acme/rest/json/entities/Enrollment.java
+
 - Relation @ManyToOne and @OneToMany bidirectional -> Student -> University:
+
+@ManyToOne
+https://github.com/MateoGarciaG/College-API-Rest-Quarkus/blob/feature/students/src/main/java/org/acme/rest/json/entities/Student.java
+
+@OneToMany
+https://github.com/MateoGarciaG/College-API-Rest-Quarkus/blob/feature/students/src/main/java/org/acme/rest/json/entities/University.java
+
 
 - Relation @ManyToMany using a Bridge Table "Classes" using @ManyToOne unidirectional(It's a way to do it in replace of to do @ManyToMany with @JoinTable which it's inneficient because we cannot add more field in this Brigde Entity in a JPA context):
 
+
+
 3. You can find the Definition of SQL tables here:
+
+PostGreSQL:
+
+https://github.com/MateoGarciaG/College-API-Rest-Quarkus/blob/feature/students/src/main/resources/import-dev.sql
+
+MySQL and MariaDB:
+
+https://github.com/MateoGarciaG/College-API-Rest-Quarkus/blob/feature/MySQL/src/main/resources/import-dev.sql
+
+https://github.com/MateoGarciaG/College-API-Rest-Quarkus/blob/feature/MariaDB/src/main/resources/import-dev.sql
 
 
 ---
